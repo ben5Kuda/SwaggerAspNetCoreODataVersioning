@@ -45,7 +45,7 @@ namespace SwaggerAspCoreOData
             description.GroupName,
               new Info()
               {
-                Title = $"Market Place API {description.ApiVersion}",
+                Title = $"Sample API {description.ApiVersion}",
                 Version = description.ApiVersion.ToString(),
               });
         }
@@ -94,7 +94,7 @@ namespace SwaggerAspCoreOData
 
       app.UseMvc(routes =>
       {
-        routes.MapVersionedODataRoutes("odata", "v1", models);
+        routes.MapVersionedODataRoutes("api", "v{version:apiVersion}", models);
         routes.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
       });
       app.UseSwagger();

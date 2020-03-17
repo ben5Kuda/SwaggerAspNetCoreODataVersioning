@@ -8,6 +8,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwaggerAspCoreOData.Models;
+using SwaggerAspCoreOData.ODataQueryOptions;
 
 namespace SwaggerAspCoreOData.Controllers
 {
@@ -17,6 +18,7 @@ namespace SwaggerAspCoreOData.Controllers
   {
     [HttpGet]
     [EnableQuery]
+    [ODataSelectRequestHandler]
     public IQueryable<User> Get()
     {
       return new List<User>
@@ -25,7 +27,16 @@ namespace SwaggerAspCoreOData.Controllers
         {
            Id = 10,
            Username = "Kuda",
-           Profile = "Admin"
+           Profile = "Admin",
+           Roles = new List<Role>
+           {
+             new Role
+             {
+                Id = 1,
+                RoleName = "Supervisor"
+             }
+            
+           }
         }
       }.AsQueryable();
     }
