@@ -21,6 +21,19 @@ namespace SwaggerAspCoreOData.Controllers
     [ODataSelectRequestHandler]
     public IQueryable<User> Get()
     {
+      return Query();
+    }
+
+    [HttpGet]
+    [EnableQuery]
+    public SingleResult<User> Get(int key)
+    {
+      var model = Query().Where(x => x.Id == key);
+      return SingleResult.Create(model);
+    }
+
+    private IQueryable<User> Query()
+    {
       return new List<User>
       {
         new User
@@ -35,7 +48,7 @@ namespace SwaggerAspCoreOData.Controllers
                 Id = 1,
                 RoleName = "Supervisor"
              }
-            
+
            }
         }
       }.AsQueryable();
