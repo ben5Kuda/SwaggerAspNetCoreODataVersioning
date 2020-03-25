@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using SwaggerAspCoreOData.Controllers;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -43,7 +44,7 @@ namespace SwaggerAspCoreOData
         {
           options.SwaggerDoc(
             description.GroupName,
-              new Info()
+              new OpenApiInfo()
               {
                 Title = $"Sample API {description.ApiVersion}",
                 Version = description.ApiVersion.ToString(),
@@ -54,8 +55,7 @@ namespace SwaggerAspCoreOData
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddMvc(options => options.EnableEndpointRouting = false);
-
+      services.AddControllers(options => options.EnableEndpointRouting = false);
       services.AddODataApiExplorer(options =>
       {
         options.GroupNameFormat = "'v'VVV";
@@ -65,18 +65,15 @@ namespace SwaggerAspCoreOData
         options.DefaultApiVersion = new ApiVersion(1, 0);
       });
 
-      services.AddApiVersioning();
+      services.AddApiVersioning(options => options.ReportApiVersions = true);
       services.AddOData().EnableApiVersioning();
       services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
       services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
       services.AddSwaggerGen();
-
-      services.AddMvc(opt =>
-      {       
-      }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    [Obsolete]
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, VersionedODataModelBuilder modelBuilder,
     IApiVersionDescriptionProvider provider)
     {
@@ -94,9 +91,11 @@ namespace SwaggerAspCoreOData
 
       app.UseMvc(routes =>
       {
+        routes.EnableDependencyInjection();
         routes.MapVersionedODataRoutes("api", "v{version:apiVersion}", models);
         routes.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
       });
+
       app.UseSwagger();
       app.UseSwaggerUI(
           options =>
