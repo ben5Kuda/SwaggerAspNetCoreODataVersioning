@@ -12,13 +12,13 @@ namespace SwaggerAspCoreOData.Models
     public int Id { get; set; }
     public string Username { get; set; }
     public string Profile { get; set; }
+    public string Email { get; set; }
 
     public IEnumerable<Role> Roles { get; set; }
   }
 
   public class Role
   {
-    public int Id { get; set; }
-    public string RoleName { get; set; }
+    public int Id { get; set; }   
   }
 }

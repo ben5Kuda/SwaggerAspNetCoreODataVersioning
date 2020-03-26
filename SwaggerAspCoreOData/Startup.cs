@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using SwaggerAspCoreOData.Controllers;
+using SwaggerAspCoreOData.DBContext;
+using SwaggerAspCoreOData.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -56,6 +59,10 @@ namespace SwaggerAspCoreOData
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers(options => options.EnableEndpointRouting = false);
+
+      services.AddDbContext<SampleDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SampleDbContext"), x => x.CommandTimeout(120).EnableRetryOnFailure()).EnableSensitiveDataLogging().EnableDetailedErrors());
+      services.AddTransient<IUserRepository, UserRepository>();
+
       services.AddODataApiExplorer(options =>
       {
         options.GroupNameFormat = "'v'VVV";
