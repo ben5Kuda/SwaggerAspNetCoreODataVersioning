@@ -20,7 +20,7 @@ namespace SwaggerAspCoreOData.Infastructure
     private readonly DbSet<TEntity> _dbSet;
 
     /// <summary>
-    /// Initialises the controller
+    /// Initialises the context
     /// </summary>
     /// <param name="dbContext"></param>
     public Repository(DbContext dbContext)

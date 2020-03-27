@@ -10,7 +10,7 @@ namespace SwaggerAspCoreOData.Repositories
 {
   public class UserRepository : Repository<DBContext.Users>, IUserRepository
   {
-    private DBContext.SampleDbContext _sampleDbContext;
+    private readonly DBContext.SampleDbContext _sampleDbContext;
     public UserRepository(DBContext.SampleDbContext sampleDbContext) : base(sampleDbContext)
     {
       _sampleDbContext = sampleDbContext;

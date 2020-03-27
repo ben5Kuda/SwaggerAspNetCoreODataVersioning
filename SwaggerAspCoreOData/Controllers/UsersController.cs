@@ -17,7 +17,7 @@ namespace SwaggerAspCoreOData.Controllers
   [ApiVersion("3.0")]
   public class UsersController : ODataController
   {
-    private IUserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
     public UsersController(IUserRepository userRepository)
     {
       _userRepository = userRepository;
@@ -70,8 +70,6 @@ namespace SwaggerAspCoreOData.Controllers
         Profile = user.Profile,
       };
     }
-
-
   }
 
 

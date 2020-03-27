@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
@@ -61,27 +62,26 @@ namespace SwaggerAspCoreOData
       services.AddControllers(options => options.EnableEndpointRouting = false);
 
       services.AddDbContext<SampleDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SampleDbContext"), x => x.CommandTimeout(120).EnableRetryOnFailure()).EnableSensitiveDataLogging().EnableDetailedErrors());
-      services.AddTransient<IUserRepository, UserRepository>();
+      services.AddScoped<IUserRepository, UserRepository>();
 
       services.AddODataApiExplorer(options =>
       {
         options.GroupNameFormat = "'v'VVV";
         options.SubstituteApiVersionInUrl = true;       
-
-        options.AssumeDefaultVersionWhenUnspecified = true;
+      
         options.DefaultApiVersion = new ApiVersion(1, 0);
       });
 
       services.AddApiVersioning(options => options.ReportApiVersions = true);
       services.AddOData().EnableApiVersioning();
-      services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
+   
       services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
       services.AddSwaggerGen();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    [Obsolete]
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, VersionedODataModelBuilder modelBuilder,
+  
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, VersionedODataModelBuilder modelBuilder,
     IApiVersionDescriptionProvider provider)
     {
       if (env.IsDevelopment())
@@ -107,12 +107,15 @@ namespace SwaggerAspCoreOData
       app.UseSwaggerUI(
           options =>
           {
+            options.DisplayRequestDuration();
+
             foreach (var description in provider.ApiVersionDescriptions)
             {
               options.SwaggerEndpoint(
                 $"/swagger/{description.GroupName}/swagger.json",
                 description.GroupName.ToUpperInvariant());
             }
+            
           });
 
       app.UseHttpsRedirection();
