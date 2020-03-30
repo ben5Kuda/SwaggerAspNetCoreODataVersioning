@@ -10,11 +10,15 @@ using Microsoft.AspNetCore.Mvc;
 using SwaggerAspCoreOData.Models;
 using SwaggerAspCoreOData.ODataQueryOptions;
 using SwaggerAspCoreOData.Repositories;
+using Microsoft.AspNetCore.Http.Abstractions;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SwaggerAspCoreOData.Controllers
 {
   [ApiVersion("1.0")]
   [ApiVersion("3.0")]
+  [Produces("application/json")]
+  [SwaggerTag("Provides operations to manage users.")]
   public class UsersController : ODataController
   {
     private readonly IUserRepository _userRepository;
@@ -23,19 +27,27 @@ namespace SwaggerAspCoreOData.Controllers
       _userRepository = userRepository;
     }
 
-    [HttpGet]
     [EnableQuery]
-    [ODataSelectRequestHandler]
+    [ODataSelectRequestHandler]   
     public IQueryable<User> Get()
     {
       return QueryAll();
     }
-
-    [HttpGet]
+  
     [EnableQuery]
     public User Get(int key)
     {
       return QuerySingle(key);
+    }
+
+    public IActionResult Post([FromBody] User model)
+    {
+      return Created(model);
+    }
+
+    public IActionResult Delete(long key)
+    {
+      return Ok("Deleted");
     }
 
     private IQueryable<User> QueryAll()

@@ -6,12 +6,14 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwaggerAspCoreOData.Models;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SwaggerAspCoreOData.Controllers
 {
 
   [ApiVersion("1.0")]
   [ApiVersion("2.0")]
+  [SwaggerTag("Provides operations to manage people.")]
   public class PeopleController : ODataController
   {
     [HttpGet]

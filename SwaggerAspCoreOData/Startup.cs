@@ -76,7 +76,10 @@ namespace SwaggerAspCoreOData
       services.AddOData().EnableApiVersioning();
    
       services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-      services.AddSwaggerGen();
+      services.AddSwaggerGen(c =>
+      {
+        c.EnableAnnotations();
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,6 +111,8 @@ namespace SwaggerAspCoreOData
           options =>
           {
             options.DisplayRequestDuration();
+            options.ShowExtensions();
+            options.DefaultModelRendering(Swashbuckle.AspNetCore.SwaggerUI.ModelRendering.Example);
 
             foreach (var description in provider.ApiVersionDescriptions)
             {

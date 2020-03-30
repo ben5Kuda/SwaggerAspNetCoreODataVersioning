@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SwaggerAspCoreOData.Models.Examples;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SwaggerAspCoreOData.Models
 {
+  [SwaggerSchemaFilter(typeof(UserSchemaExample))]
   public class User
   {
     [Key]
