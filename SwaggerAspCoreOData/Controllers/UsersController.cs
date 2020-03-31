@@ -12,6 +12,8 @@ using SwaggerAspCoreOData.ODataQueryOptions;
 using SwaggerAspCoreOData.Repositories;
 using Microsoft.AspNetCore.Http.Abstractions;
 using Swashbuckle.AspNetCore.Annotations;
+using SwaggerAspCoreOData.Models.Mappers;
+using SwaggerAspCoreOData.RequestValidation;
 
 namespace SwaggerAspCoreOData.Controllers
 {
@@ -35,19 +37,76 @@ namespace SwaggerAspCoreOData.Controllers
     }
   
     [EnableQuery]
-    public User Get(int key)
+    public SingleResult<User> Get(int key)
     {
-      return QuerySingle(key);
+      var model = QuerySingle(key);
+      return SingleResult.Create(model);
     }
 
+
+    [ServiceFilter(typeof(ModelValidationFilterAttribute))]
     public IActionResult Post([FromBody] User model)
-    {
+    {    
+      var map = new UsersMapper();
+
+      var entity = map.ToEntity(model);
+
+      _userRepository.Add(entity);
+      _userRepository.Save();
+
       return Created(model);
     }
 
-    public IActionResult Delete(long key)
+    [ServiceFilter(typeof(ModelValidationFilterAttribute))]
+    public IActionResult Patch(int key, [FromBody] Delta<User> delta)
+    {      
+
+      IEnumerable<string> invalidPropertyNames = delta.GetChangedPropertyNames().Except(new[]
+      {
+        "Email", "Profile"
+      });
+
+      if (invalidPropertyNames.Any())
+      {
+        foreach (string propertyName in invalidPropertyNames)
+        {
+          return BadRequest(propertyName + " : This field is not allowed to be updated.");
+        }
+      }
+
+      var entity = _userRepository.GetByKey(key);
+
+      if (entity == null)
+      {
+        return NotFound();
+      }
+
+      var map = new UsersMapper();
+      var model = map.FromEntity(entity);
+      delta.Patch(model);
+
+      var userEntity = map.ToEntity(model, entity);
+
+      _userRepository.Update(userEntity);
+      _userRepository.Save();
+
+      return Ok();
+
+    }
+
+    public IActionResult Delete(int key)
     {
-      return Ok("Deleted");
+      var entity = _userRepository.GetByKey(key);
+
+      if (entity == null)
+      {
+        return NotFound();
+      }
+
+      _userRepository.Delete(entity);
+      _userRepository.Save();
+
+      return Ok();
     }
 
     private IQueryable<User> QueryAll()
@@ -66,23 +125,28 @@ namespace SwaggerAspCoreOData.Controllers
                         {
                           Id = r.RoleId
                         }
-
               }).AsQueryable();
     }
 
-    private User QuerySingle(int key)
+    private IQueryable<User> QuerySingle(int key)
     {
       var user = _userRepository.GetByKey(key);
 
-      return new User
+      if (user == null)
       {
-        Id = user.Id,
-        Username = user.Name,
-        Email = user.Email,
-        Profile = user.Profile,
-      };
+        return Enumerable.Empty<User>().AsQueryable();
+      }
+
+      return new List<User>
+      {
+        new User
+        {
+           Id = user.Id,
+           Username = user.Name,
+           Email = user.Email,
+           Profile = user.Profile,
+        }
+      }.AsQueryable();
     }
   }
-
-
 }

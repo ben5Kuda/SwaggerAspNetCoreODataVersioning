@@ -21,6 +21,7 @@ using Microsoft.OpenApi.Models;
 using SwaggerAspCoreOData.Controllers;
 using SwaggerAspCoreOData.DBContext;
 using SwaggerAspCoreOData.Repositories;
+using SwaggerAspCoreOData.RequestValidation;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -63,6 +64,8 @@ namespace SwaggerAspCoreOData
 
       services.AddDbContext<SampleDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SampleDbContext"), x => x.CommandTimeout(120).EnableRetryOnFailure()).EnableSensitiveDataLogging().EnableDetailedErrors());
       services.AddScoped<IUserRepository, UserRepository>();
+
+      services.AddScoped<ModelValidationFilterAttribute>();
 
       services.AddODataApiExplorer(options =>
       {

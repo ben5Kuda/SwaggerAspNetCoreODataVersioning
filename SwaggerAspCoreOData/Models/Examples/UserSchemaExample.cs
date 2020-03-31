@@ -13,15 +13,15 @@ namespace SwaggerAspCoreOData.Models.Examples
   public class UserSchemaExample : ISchemaFilter
   {
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
-    {
-     
-      schema.Example = new OpenApiObject
-      {
-        ["id"] = new OpenApiInteger(1),
-        ["username"] = new OpenApiString("Kuda"),
-        ["email"] = new OpenApiString("kmkuda@me.com"),
-        ["profile"] = new OpenApiString("Everyone"),
-        ["roles"] = new OpenApiArray()
+    {     
+ 
+       schema.Example = new OpenApiObject
+       {
+         ["id"] = new OpenApiInteger(1),
+         ["username"] = new OpenApiString("Kuda"),
+         ["email"] = new OpenApiString("kmkuda@me.com"),
+         ["profile"] = new OpenApiString("Everyone"),
+         ["roles"] = new OpenApiArray()
       };
     }
 
