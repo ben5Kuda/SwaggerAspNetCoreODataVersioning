@@ -23,20 +23,6 @@ namespace SwaggerAspCoreOData.Models.Examples
          ["profile"] = new OpenApiString("Everyone"),
          ["roles"] = new OpenApiArray()
       };
-    }
-
-  
-  }
-
-  public class RoleSchema : IOpenApiAny
-  {
-    public List<Role> roles = new List<Role> { new Role { Id = 10 } };
-
-    public AnyType AnyType => throw new NotImplementedException();
-
-    public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
-    {
-      throw new NotImplementedException();
-    }
+    }  
   }
 }

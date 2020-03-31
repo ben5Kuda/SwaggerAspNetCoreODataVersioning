@@ -8,7 +8,7 @@ namespace SwaggerAspCoreOData.Models.Mappers
 {
   public class UsersMapper
   {
-    // <summary>
+    /// <summary>
     /// Maps a database entity to a domain model 
     /// </summary>
     /// <param name="source"></param>
@@ -21,7 +21,7 @@ namespace SwaggerAspCoreOData.Models.Mappers
     }
 
     /// <summary>
-    /// Maps a UserInfo domain model to a User database entity
+    /// Maps a User domain model to a User database entity
     /// </summary>
     /// <param name="source"></param>
     /// <param name="target"></param>
@@ -51,7 +51,7 @@ namespace SwaggerAspCoreOData.Models.Mappers
     }
 
     /// <summary>
-    /// Maps a UserEx database entity to a UserInfo domain model
+    /// Maps a User database entity to a User domain model
     /// </summary>
     /// <param name="source"></param>
     /// <param name="target"></param>

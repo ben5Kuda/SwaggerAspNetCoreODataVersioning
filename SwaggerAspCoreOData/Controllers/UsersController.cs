@@ -29,7 +29,7 @@ namespace SwaggerAspCoreOData.Controllers
       _userRepository = userRepository;
     }
 
-    [EnableQuery]
+    [EnableQuery(PageSize = 50)]
     [ODataSelectRequestHandler]   
     public IQueryable<User> Get()
     {
@@ -43,10 +43,16 @@ namespace SwaggerAspCoreOData.Controllers
       return SingleResult.Create(model);
     }
 
-
     [ServiceFilter(typeof(ModelValidationFilterAttribute))]
     public IActionResult Post([FromBody] User model)
-    {    
+    {
+      var users = _userRepository.Find(x => x.Name == model.Username);
+
+      if (users.Any())
+      {
+        return BadRequest("The username supplied is already in use");
+      }
+
       var map = new UsersMapper();
 
       var entity = map.ToEntity(model);
@@ -54,7 +60,7 @@ namespace SwaggerAspCoreOData.Controllers
       _userRepository.Add(entity);
       _userRepository.Save();
 
-      return Created(model);
+      return Created(entity);
     }
 
     [ServiceFilter(typeof(ModelValidationFilterAttribute))]
