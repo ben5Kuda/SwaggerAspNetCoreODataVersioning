@@ -82,6 +82,32 @@ namespace SwaggerAspCoreOData
       services.AddSwaggerGen(c =>
       {
         c.EnableAnnotations();
+        string HeaderName = "X-Api-Key";
+        c.AddSecurityDefinition(HeaderName, new OpenApiSecurityScheme
+        {
+            Description = $"Api key needed to access the endpoints. {HeaderName}: My_API_Key",
+            In = ParameterLocation.Header,
+            Name = HeaderName,
+            Type = SecuritySchemeType.ApiKey
+        });
+
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Name = HeaderName,
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Header,
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = HeaderName
+                    },
+                },
+                new string[] {}
+            }
+        });
       });
     }
 
@@ -115,6 +141,7 @@ namespace SwaggerAspCoreOData
           {
             options.DisplayRequestDuration();
             options.ShowExtensions();
+            
             options.DefaultModelRendering(Swashbuckle.AspNetCore.SwaggerUI.ModelRendering.Example);
 
             foreach (var description in provider.ApiVersionDescriptions)
