@@ -21,7 +21,13 @@ namespace SwaggerAspCoreOData.Models.Examples
          ["username"] = new OpenApiString("Kuda"),
          ["email"] = new OpenApiString("kmkuda@me.com"),
          ["profile"] = new OpenApiString("Everyone"),
-         ["roles"] = new OpenApiArray()
+         ["roles"] = new OpenApiArray
+         {
+          new OpenApiObject
+          {
+            ["id"] = new OpenApiInteger(12)
+          }
+         }
       };
     }  
   }

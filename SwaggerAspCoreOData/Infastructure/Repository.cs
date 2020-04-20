@@ -33,7 +33,7 @@ namespace SwaggerAspCoreOData.Infastructure
     /// Adds an entity
     /// </summary>
     /// <param name="entity"></param>
-    void IRepository<TEntity>.Add(TEntity entity)
+    public void Add(TEntity entity)
     {
       _dbSet.Add(entity);
     }
@@ -42,7 +42,7 @@ namespace SwaggerAspCoreOData.Infastructure
     /// Add a range of entities
     /// </summary>
     /// <param name="entities"></param>
-    void IRepository<TEntity>.AddRange(ICollection<TEntity> entities)
+    public void AddRange(ICollection<TEntity> entities)
     {
       _dbSet.AddRange(entities);
     }
@@ -50,7 +50,7 @@ namespace SwaggerAspCoreOData.Infastructure
     /// <summary>
     /// Calls the save changes method at the database level
     /// </summary>
-    void IRepository<TEntity>.Save()
+    public void Save()
     {
       _dbContext.SaveChanges();
     }
@@ -59,7 +59,7 @@ namespace SwaggerAspCoreOData.Infastructure
     /// Deletes an entity
     /// </summary>
     /// <param name="entity"></param>
-    void IRepository<TEntity>.Delete(TEntity entity)
+    public void Delete(TEntity entity)
     {
       _dbSet.Remove(entity);
     }
@@ -68,7 +68,7 @@ namespace SwaggerAspCoreOData.Infastructure
     /// Deletes a range of entities
     /// </summary>
     /// <param name="entities"></param>
-    void IRepository<TEntity>.DeleteRange(ICollection<TEntity> entities)
+    public void DeleteRange(ICollection<TEntity> entities)
     {
       _dbSet.RemoveRange(entities);
     }
@@ -78,7 +78,7 @@ namespace SwaggerAspCoreOData.Infastructure
     /// </summary>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    IEnumerable<TEntity> IRepository<TEntity>.Find(Expression<Func<TEntity, bool>> predicate)
+    public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
     {
       return _dbSet.Where(predicate);
     }
@@ -87,7 +87,7 @@ namespace SwaggerAspCoreOData.Infastructure
     /// Gets all entities
     /// </summary>
     /// <returns></returns>
-    IEnumerable<TEntity> IRepository<TEntity>.GetAll()
+    public IEnumerable<TEntity> GetAll()
     {
       return _dbSet.Select(x => x);
     }
@@ -97,7 +97,7 @@ namespace SwaggerAspCoreOData.Infastructure
     /// </summary>
     /// <param name="Id"></param>
     /// <returns></returns>
-    TEntity IRepository<TEntity>.GetByKey(object Id)
+    public TEntity GetByKey(object Id)
     {
       return _dbSet.Find(Id);
     }
@@ -106,7 +106,7 @@ namespace SwaggerAspCoreOData.Infastructure
     /// Updates an entity
     /// </summary>
     /// <param name="entity"></param>
-    void IRepository<TEntity>.Update(TEntity entity)
+    public void Update(TEntity entity)
     {
       _dbSet.Update(entity);
     }
