@@ -27,6 +27,9 @@ namespace SwaggerAspCoreOData.Configuration
       var user = builder.EntitySet<User>("Users").EntityType;
       user.HasKey(p => p.Id);
 
+      var personApiKeyAuth = builder.EntitySet<Person>("PeopleApiKeyAuth").EntityType;
+      user.HasKey(p => p.Id);
+
       if (apiVersion < ApiVersions.V3)
       {
         user.Ignore(p => p.Profile);
