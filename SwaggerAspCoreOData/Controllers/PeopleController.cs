@@ -13,6 +13,7 @@ namespace SwaggerAspCoreOData.Controllers
 
   [ApiVersion("1.0")]
   [ApiVersion("2.0")]
+  [Produces("application/json")]
   [SwaggerTag("Provides operations to manage people.")]
   public class PeopleController : ODataController
   {
