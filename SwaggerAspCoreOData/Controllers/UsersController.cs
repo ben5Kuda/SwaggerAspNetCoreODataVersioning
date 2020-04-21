@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http.Abstractions;
 using Swashbuckle.AspNetCore.Annotations;
 using SwaggerAspCoreOData.Models.Mappers;
 using SwaggerAspCoreOData.RequestValidation;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SwaggerAspCoreOData.Controllers
 {
@@ -21,6 +22,7 @@ namespace SwaggerAspCoreOData.Controllers
   [ApiVersion("3.0")]
   [Produces("application/json")]
   [SwaggerTag("Provides operations to manage users.")]
+  [Authorize (Policy = "AuthorizePolicy")]
   public class UsersController : ODataController
   {
     private readonly IUserRepository _userRepository;
