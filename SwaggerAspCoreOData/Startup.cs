@@ -26,6 +26,7 @@ using SwaggerAspCoreOData.Controllers;
 using SwaggerAspCoreOData.DBContext;
 using SwaggerAspCoreOData.Repositories;
 using SwaggerAspCoreOData.RequestValidation;
+using SwaggerAspCoreOData.Settings;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -70,6 +71,7 @@ namespace SwaggerAspCoreOData
       services.AddScoped<IUserRepository, UserRepository>();
 
       services.AddScoped<ModelValidationFilterAttribute>();
+      services.Configure<CurrentEnviroment>(Configuration.GetSection("Enviroment"));
 
       JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -145,6 +147,11 @@ namespace SwaggerAspCoreOData
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, VersionedODataModelBuilder modelBuilder,
     IApiVersionDescriptionProvider provider)
     {
+      var builder = new ConfigurationBuilder()
+        .SetBasePath(env.ContentRootPath)
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+      
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();

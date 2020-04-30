@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNetCore.Mvc;
 using SwaggerAspCoreOData.Models;
+using SwaggerAspCoreOData.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,9 @@ namespace SwaggerAspCoreOData.Configuration
       {
         user.Ignore(p => p.Profile);
       }
+
+      var env = builder.EntitySet<CurrentEnviroment>("Environment").EntityType;
+      env.HasKey(p => p.Stage);
     }
   }
 }
