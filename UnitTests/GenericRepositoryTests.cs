@@ -18,8 +18,7 @@ namespace UnitTests
     public GenericRepositoryTests()
     {
       sampleDbContextMock = new SampleDbContextMock();
-      sampleDbContext = sampleDbContextMock.GetDbContext();
-      repository = new Mock<IRepository<SwaggerAspCoreOData.DBContext.Users>>();
+      sampleDbContext = sampleDbContextMock.GetDbContext();     
     }
 
     [Fact]
