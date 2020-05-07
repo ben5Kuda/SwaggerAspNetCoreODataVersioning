@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -72,6 +74,7 @@ namespace SwaggerAspCoreOData
 
       services.AddScoped<ModelValidationFilterAttribute>();
       services.Configure<CurrentEnviroment>(Configuration.GetSection("Enviroment"));
+      services.AddSingleton(Configuration.GetSection("Security").Get<OAuthSettings>());
 
       JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -79,9 +82,9 @@ namespace SwaggerAspCoreOData
            .AddJwtBearer(options =>
            {
              // base-address of identityserver
-             options.Authority = "https://localhost:5021";
+             options.Authority = OAuthSettings.STSAuthority;
              // name of the API resource
-             options.Audience = "https://localhost:5021/resources";
+             options.Audience = OAuthSettings.STSAudience;
              //options.SaveToken = true;
            });
 
@@ -110,7 +113,7 @@ namespace SwaggerAspCoreOData
             Implicit = new OpenApiOAuthFlow
             {
               // this your authorisation server endpoint
-              AuthorizationUrl = new Uri("https://localhost:5021/connect/authorize", UriKind.Absolute),
+              AuthorizationUrl = new Uri(OAuthSettings.SwaggerAuthorizationUrl, UriKind.Absolute),
               Scopes = new Dictionary<string, string>
                 {
                     { "read", "Access identity information" },
@@ -148,10 +151,10 @@ namespace SwaggerAspCoreOData
     IApiVersionDescriptionProvider provider)
     {
       var builder = new ConfigurationBuilder()
-        .SetBasePath(env.ContentRootPath)
-        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-      
+     .SetBasePath(env.ContentRootPath)
+     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
@@ -159,7 +162,7 @@ namespace SwaggerAspCoreOData
       else
       {
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-        app.UseHsts();
+        //app.UseHsts();
       }
 
       // token validation
@@ -182,7 +185,7 @@ namespace SwaggerAspCoreOData
             options.ShowExtensions();
             options.DefaultModelRendering(Swashbuckle.AspNetCore.SwaggerUI.ModelRendering.Example);
 
-            options.OAuthClientId("sampleapi");
+            options.OAuthClientId(OAuthSettings.SwaggerClientId);
             options.OAuthClientSecret("");
             options.OAuthRealm("Sample API");
             options.OAuthAppName("Sample API");
