@@ -22,7 +22,7 @@ namespace SwaggerAspCoreOData.Controllers
   [ApiVersion("3.0")]
   [Produces("application/json")]
   [SwaggerTag("Provides operations to manage users.")]
-  [Authorize (Policy = "AuthorizePolicy")]
+ // [Authorize (Policy = "AuthorizePolicy")]
   public class UsersController : ODataController
   {
     private readonly IUserRepository _userRepository;
@@ -115,6 +115,19 @@ namespace SwaggerAspCoreOData.Controllers
       _userRepository.Save();
 
       return Ok();
+    }
+
+    [ServiceFilter(typeof(ModelValidationFilterAttribute))]
+    public IActionResult SetProfile(int key, ODataActionParameters parameters)
+    {
+      object value;
+      parameters.TryGetValue("profile", out value);
+      int profileId = (int)value;
+
+      // link user to the profile logic goes here
+      
+      return Ok();
+     
     }
 
     private IQueryable<User> QueryAll()

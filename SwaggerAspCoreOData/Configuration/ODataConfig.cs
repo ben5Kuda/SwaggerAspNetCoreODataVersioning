@@ -28,13 +28,16 @@ namespace SwaggerAspCoreOData.Configuration
       var user = builder.EntitySet<User>("Users").EntityType;
       user.HasKey(p => p.Id);
 
+      var profile = builder.EntityType<User>().Action("SetProfile");
+      profile.Parameter<int>("profile");
+
       if (apiVersion < ApiVersions.V3)
       {
         user.Ignore(p => p.Profile);
       }
 
       var env = builder.EntitySet<CurrentEnviroment>("Environment").EntityType;
-      env.HasKey(p => p.Stage);
+      env.HasKey(p => p.Stage);  
     }
   }
 }
